@@ -1,11 +1,14 @@
 import react from 'react';
 
-const BASE_API = 'http://allugofrases.herokuapp.com';
+const URL = 'http://192.168.66.115:8000';
 
 export default {
     getQuest: async () => {
-        const req = await fetch(`${BASE_API}/frases`);
+        console.log("URL: ", URL);
+        const req = await fetch(`${URL}/quest`);
         const json = await req.json();
+        console.log(json);
+
         return json;
     }
 

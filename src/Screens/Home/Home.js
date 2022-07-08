@@ -28,8 +28,8 @@ export default () => {
       </TextUserQuest>
       <ListArea>
         {list.map((item, k)=>(
-                          <Card key={k} data={item} />
-                      ))}
+        <Card key={k} data={item} />
+        ))}
       </ListArea>
     </Container>
   )
