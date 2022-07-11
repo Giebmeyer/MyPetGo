@@ -18,7 +18,7 @@ const ContainerLeft = styled.View`
 const Container = styled.TouchableOpacity`
     background-color: transparent;
     flex-direction: row;
-    width: 300px;
+    width: 97%;
     height: 150px;
     border-radius: 30px;
     margin-bottom: 10px;
@@ -33,11 +33,11 @@ const Status = styled.View`
 const Descricao = styled.Text`
     justify-content: center;
     align-items: center;
-    font-size: 20px;
-    color: black;
+    font-size: 18px;
+    color: #121215;
 `;
 
-const ContainerDescriptin = styled.View`
+const ContainerDescription = styled.View`
     justify-content: center;
     align-items: center;
 `;
@@ -52,6 +52,7 @@ const TextInformation = styled.Text`
 `;
 
 export default (data) => {
+    let index = data.data.id;
  return(
 
    <Container>
@@ -59,25 +60,24 @@ export default (data) => {
         </ContainerLeft>
 
         <ContainerRigh>
-           <ContainerDescriptin>
-            <Descricao>
+           <ContainerDescription>
+                <Descricao>
                     {data.data.Descricao}
                 </Descricao>
-           </ContainerDescriptin>
+           </ContainerDescription>
 
         <InformationQuest>
             <TextInformation>
-                {data.data.id}
+                {data.data.Endereco.Bairro}
             </TextInformation>
 
             <TextInformation>
-                {data.data.Descricao}
-            </TextInformation>
-        
-            <TextInformation>
-                {data.data.Descricao}
+                {data.data.Endereco.Rua}, {data.data.Endereco.Numero}
             </TextInformation>
 
+            <TextInformation>
+                {data.data.Tarefa.Tipo}
+            </TextInformation>
         </InformationQuest>
 
         </ContainerRigh>

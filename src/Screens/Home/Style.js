@@ -8,17 +8,47 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const ListArea = styled.ScrollView`
-    padding: 40px;    
+    padding: 20px;    
     width: 100%;
 `;
 
 export const TextUser = styled.Text`
     font-size: 16px;
-    color: #FFFFFF
-    margin-top: 5px
+    color: #FFFFFF;
+    margin-top: 5px;
 `;
 
 export const TextUserQuest = styled.Text`
-    font-size: 16px;
-    color: #FFFFFF
+    font-size: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    color: #FFFFFF;
+    font-weight: bold;
+`;
+
+export const ContainerTexts = styled.View`
+    text-align: left;
+    width: 100%;
+`;
+
+export const ContainerQuests = styled.View`
+    text-align: left;
+    width: 100%;
+`;
+
+export const TextMainCard = styled.Text`
+    text-align: left;
+    font-size: 18px;
+    margin: 10px;
+    color: #FFFFFF;
+    font-weight: bold;
+`;
+
+export const ContainerMainCard = styled.View`
+    margin-bottom: 20px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #333333;
+    align-items: center;
 `;
