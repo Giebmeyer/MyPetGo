@@ -1,5 +1,6 @@
 import react from "react";
 import styled from "styled-components/native";
+import { useNavigation } from "@react-navigation/native";
 
 const ContainerRigh = styled.View`
     background-color: #FFFFFF;
@@ -31,13 +32,11 @@ const Status = styled.View`
 `;
 
 const Descricao = styled.Text`
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
+    margin: 2px;
     color: #121215;
 `;
 
-const ContainerDescription = styled.View`
+const ContainerMainInformation = styled.View`
     justify-content: center;
     align-items: center;
 `;
@@ -51,8 +50,19 @@ const TextInformation = styled.Text`
     color: grey;
 `;
 
+const DescricaoMainInformation = styled.Text`
+    color: grey;
+`;
+
 export default (data) => {
-    let index = data.data.id;
+
+    const navigator = useNavigation();
+
+    showInformationCard = (Information) => {
+        console.log(Information);
+        navigator.navigate('CardInformation', String(Information));
+    }
+
  return(
 
    <Container>
@@ -60,25 +70,44 @@ export default (data) => {
         </ContainerLeft>
 
         <ContainerRigh>
-           <ContainerDescription>
-                <Descricao>
-                    {data.data.Descricao}
-                </Descricao>
-           </ContainerDescription>
 
-        <InformationQuest>
-            <TextInformation>
-                {data.data.Endereco.Bairro}
-            </TextInformation>
+            <InformationQuest>
+                    <Descricao>
+                        Entrega #{data.data.id}
+                    </Descricao>
 
-            <TextInformation>
-                {data.data.Endereco.Rua}, {data.data.Endereco.Numero}
-            </TextInformation>
+                <ContainerMainInformation>
+                    <DescricaoMainInformation>
+                        Endereço
+                    </DescricaoMainInformation>
+            </ContainerMainInformation>
 
-            <TextInformation>
-                {data.data.Tarefa.Tipo}
-            </TextInformation>
-        </InformationQuest>
+                <TextInformation>
+                Bairro: {data.data.Endereco.Bairro}
+                </TextInformation>
+
+                <TextInformation>
+                    {data.data.Endereco.Rua}, {data.data.Endereco.Numero}
+                </TextInformation>
+
+                <TextInformation>
+                    {data.data.Tarefa.Tipo}
+                </TextInformation>
+
+                <ContainerMainInformation>
+                    <DescricaoMainInformation>
+                        Responsavel
+                    </DescricaoMainInformation>
+            </ContainerMainInformation>
+
+                <TextInformation>
+                    {data.data.Responsavel.Nome} - {data.data.Animal.Nome}
+                </TextInformation>
+
+                <TextInformation>
+                    {data.data.Responsavel.Telefone}
+                </TextInformation>
+            </InformationQuest>
 
         </ContainerRigh>
    </Container>

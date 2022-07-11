@@ -1,10 +1,14 @@
 import react from "react";
 import { Text } from "react-native";
+import {} from "./Style";
+import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
 
-export default () => {
+export default (Information) => {
     return(
-        <Text>
-
-        </Text>
+        <GlobalContainer>
+            <Text>
+                Card Information
+            </Text>
+        </GlobalContainer>
     )
 }

@@ -49,6 +49,16 @@ export const ContainerMainCard = styled.View`
     margin-bottom: 20px;
     width: 100%;
     border-radius: 10px;
-    background-color: #333333;
+    background-color: #232323;
     align-items: center;
 `;
+
+export const LoadingIcon = styled.ActivityIndicator`
+
+`;
+
+export const ContainerLoadingIcon = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+`; 
