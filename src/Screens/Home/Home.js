@@ -7,6 +7,7 @@ import Api from "../../Api";
 import {ListArea, TextUser, TextUserQuest, ContainerTexts,
   ContainerMainCard, TextMainCard, ContainerQuests, LoadingIcon, ContainerLoadingIcon} from "./Style";
 
+
 export default () => {
 
   let [listTakeOnly, setListTakeOnly] = useState([]);
@@ -48,59 +49,58 @@ export default () => {
         </ContainerTexts>
       
           
-            {loading &&
+            {loading?
                 <ContainerLoadingIcon>
                     <LoadingIcon size="large" color="#FFFFFF" />
                     <TextMainCard>Carregando...</TextMainCard>
                 </ContainerLoadingIcon>
+                :
+                 <ListArea refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+                }>
+      
+              <ContainerMainCard>
+                <ContainerQuests>
+                  <TextMainCard>
+                    Somente Buscar
+                  </TextMainCard>
+                </ContainerQuests>
+  
+      
+                {listSearchOnly.map((item, k)=>(
+              <Card key={k} data={item} />
+              ))}  
+              </ContainerMainCard>
+              
+              <ContainerMainCard>
+                <ContainerQuests>
+                  <TextMainCard>
+                    Somente Levar
+                  </TextMainCard>
+                </ContainerQuests>
+                {listTakeOnly.map((item, k)=>(
+              <Card key={k} data={item} />
+              ))}  
+              </ContainerMainCard>
+      
+      
+      
+              <ContainerMainCard>
+               <ContainerQuests>
+                <TextMainCard>
+                    Buscar e Levar
+                  </TextMainCard>
+               </ContainerQuests>
+               {listSearchTake.map((item, k)=>(
+              <Card key={k} data={item} />
+              ))}  
+              </ContainerMainCard>   
+            </ListArea>
             }
+            
           
 
-            {!loading &&
-              <ListArea refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
-              }>
-    
-            <ContainerMainCard>
-              <ContainerQuests>
-                <TextMainCard>
-                  Somente Buscar
-                </TextMainCard>
-              </ContainerQuests>
-              
-    
-    
-              {listSearchOnly.map((item, k)=>(
-            <Card key={k} data={item} />
-            ))}  
-            </ContainerMainCard>
-            
-            <ContainerMainCard>
-              <ContainerQuests>
-                <TextMainCard>
-                  Somente Levar
-                </TextMainCard>
-              </ContainerQuests>
-              {listTakeOnly.map((item, k)=>(
-            <Card key={k} data={item} />
-            ))}  
-            </ContainerMainCard>
-    
-    
-    
-            <ContainerMainCard>
-             <ContainerQuests>
-              <TextMainCard>
-                  Buscar e Levar
-                </TextMainCard>
-             </ContainerQuests>
-             {listSearchTake.map((item, k)=>(
-            <Card key={k} data={item} />
-            ))}  
-            </ContainerMainCard>   
-          </ListArea>
-
-            }
+           
           
 
     </GlobalContainer>

@@ -10,7 +10,7 @@ const ContainerRigh = styled.View`
 `;
 
 const ContainerLeft = styled.View`
-    background-color: #3A5C9E;
+    background-color: #63C2D1;
     width: 3%;
     borderTopLeftRadius: 20px;
     borderBottomLeftRadius: 30px;
@@ -39,6 +39,7 @@ const Descricao = styled.Text`
 const ContainerMainInformation = styled.View`
     justify-content: center;
     align-items: center;
+
 `;
 
 const InformationQuest = styled.View`
@@ -58,14 +59,13 @@ export default (data) => {
 
     const navigator = useNavigation();
 
-    showInformationCard = (Information) => {
-        console.log(Information);
-        navigator.navigate('CardInformation', String(Information));
+    showInformationCard = (data) => {
+        navigator.navigate("CardInformation",data);
     }
 
  return(
 
-   <Container>
+   <Container onPress = {() => this.showInformationCard(data)}>
         <ContainerLeft>
         </ContainerLeft>
 
@@ -73,7 +73,7 @@ export default (data) => {
 
             <InformationQuest>
                     <Descricao>
-                        Entrega #{data.data.id}
+                        Viagem #{data.data.id}
                     </Descricao>
 
                 <ContainerMainInformation>

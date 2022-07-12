@@ -49,7 +49,7 @@ export const ContainerMainCard = styled.View`
     margin-bottom: 20px;
     width: 100%;
     border-radius: 10px;
-    background-color: #232323;
+    background-color: #035266;
     align-items: center;
 `;
 
