@@ -32,19 +32,16 @@ const Status = styled.View`
 `;
 
 const Descricao = styled.Text`
-    margin: 2px;
-    color: #121215;
+
 `;
 
 const ContainerMainInformation = styled.View`
     justify-content: center;
     align-items: center;
-
 `;
 
 const InformationQuest = styled.View`
-    margin-top: 15px;
-    margin-left: 15px;
+    margin: 5px;
 `;
 
 const TextInformation = styled.Text`
@@ -53,6 +50,23 @@ const TextInformation = styled.Text`
 
 const DescricaoMainInformation = styled.Text`
     color: grey;
+`;
+
+export const ContainerCardTitle= styled.View`
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin: 5px;
+`;
+
+export const ContainerTextCollection = styled.View`
+    border-radius: 30px;
+    background-color: #63C2D1;
+`;
+
+export const TextStatusCollection = styled.Text`
+    font-size: 12px;
+    margin: 5px;
 `;
 
 export default (data) => {
@@ -72,15 +86,22 @@ export default (data) => {
         <ContainerRigh>
 
             <InformationQuest>
+
+                <ContainerCardTitle>
                     <Descricao>
                         Viagem #{data.data.id}
                     </Descricao>
+                    <ContainerTextCollection>
+                        <TextStatusCollection>{data.data.Tarefa.Status}</TextStatusCollection>
+                    </ContainerTextCollection>
+                </ContainerCardTitle>
+
 
                 <ContainerMainInformation>
                     <DescricaoMainInformation>
                         Endereço
                     </DescricaoMainInformation>
-            </ContainerMainInformation>
+                </ContainerMainInformation>
 
                 <TextInformation>
                 Bairro: {data.data.Endereco.Bairro}
@@ -98,7 +119,7 @@ export default (data) => {
                     <DescricaoMainInformation>
                         Responsavel
                     </DescricaoMainInformation>
-            </ContainerMainInformation>
+                </ContainerMainInformation>
 
                 <TextInformation>
                     {data.data.Responsavel.Nome} - {data.data.Animal.Nome}

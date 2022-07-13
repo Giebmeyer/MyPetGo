@@ -41,12 +41,12 @@ export const ContainerQuests = styled.View`
     background-color: #035266;
     align-items: left;
     flex-direction: row;
+    word-wrap: normal;
 `;
 
 export const TextMainCard = styled.Text`
     text-align: left;
     font-size: 18px;
-    margin-left: 12px;
     margin: 10px;
     color: #FFFFFF;
 `;
@@ -93,11 +93,24 @@ export const CustomButton = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     width: 85%;
-    box-shadow: 5px 2px 2px #264C52;
 `;
 export const CustomButtonText = styled.Text`
     font-size: 18px;
     color: #FFF;
+`;
+
+export const CustomButtonDisable = styled.TouchableOpacity`
+    height: 60px;
+    background-color: #035266;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    box-shadow: 5px 2px 2px #51686B;
+`;
+export const CustomButtonTextDisable = styled.Text`
+    font-size: 18px;
+    color: #808080;
 `;
 
 export const ContainerTextCollection = styled.View`
@@ -111,4 +124,3 @@ export const TextStatusCollection = styled.Text`
     margin: 5px;
     color: #FFF;
 `;
-

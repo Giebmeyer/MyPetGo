@@ -2,37 +2,56 @@ import React, { useEffect, useState } from "react";
 import Card from "../../Components/Card";
 import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
 import { RefreshControl } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import Api from "../../Api";
 
 import {ListArea, TextUser, TextUserQuest, ContainerTexts,
   ContainerMainCard, TextMainCard, ContainerQuests, LoadingIcon, ContainerLoadingIcon} from "./Style";
 
-
+export var quests = [];
+  
 export default () => {
+
+  const navigatior = useNavigation()
+
+
 
   let [listTakeOnly, setListTakeOnly] = useState([]);
   let [listSearchOnly, setListSearchOnly] = useState([]);
   let [listSearchTake, setListSearchTake] = useState([]);
+  let [ListQuestCompleted, setListQuestCompleted] = useState([]);
   let [listQuest, setListQuest] = useState([]);
+  
+  const [completed, setCompleted] = useState(true)
+  const [load, setLoad] = useState(true)
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const getQuest = async () => {
     setLoading(true);
-    let quests = await Api.getQuest();
+    quests = await Api.getQuest();
 
       setListQuest(quests);
-      setListSearchOnly(quests.filter(SearchOnly => SearchOnly.Tarefa.Tipo == 'Apenas Buscar'));
-      setListTakeOnly(quests.filter(TakeOnly => TakeOnly.Tarefa.Tipo == 'Apenas Levar'));
-      setListSearchTake(quests.filter(SearchTake => SearchTake.Tarefa.Tipo == 'Levar e Buscar'));
+      setListSearchOnly(quests.filter(SearchOnly => SearchOnly.Tarefa.Tipo == 'Apenas Buscar' && SearchOnly.Tarefa.Status != 'Entregue'));
+      setListTakeOnly(quests.filter(TakeOnly => TakeOnly.Tarefa.Tipo == 'Apenas Levar' && TakeOnly.Tarefa.Status != 'Entregue'));
+      setListSearchTake(quests.filter(SearchTake => SearchTake.Tarefa.Tipo == 'Levar e Buscar' && SearchTake.Tarefa.Status != 'Entregue'));
+
+      if(quests.filter(SearchCompleted => SearchCompleted.Tarefa.Status == 'Entregue') != ""){
+        setCompleted(true)
+        setListQuestCompleted(quests.filter(SearchCompleted => SearchCompleted.Tarefa.Status == 'Entregue'));
+      }else{
+        setCompleted(false);
+      } 
       
     setLoading(false);
   }
 
 
-  useEffect(() => {
+  useEffect(()=>{
     getQuest();
-  }, []);
+    navigatior.addListener('focus', ()=>setLoad(!load));
+
+ },[load, navigatior])
 
   const onRefresh = () => {
     setRefreshing(false);
@@ -95,6 +114,22 @@ export default () => {
               <Card key={k} data={item} />
               ))}  
               </ContainerMainCard>   
+
+
+            {completed &&
+              <ContainerMainCard>
+               <ContainerQuests>
+                <TextMainCard>
+                    Concluídas
+                  </TextMainCard>
+               </ContainerQuests>
+               {ListQuestCompleted.map((item, k)=>(
+              <Card key={k} data={item} />
+              ))}  
+              </ContainerMainCard> 
+            }
+
+              
             </ListArea>
             }
             

@@ -62,3 +62,5 @@ export const ContainerLoadingIcon = styled.View`
     justify-content: center;
     align-items: center;
 `; 
+
+

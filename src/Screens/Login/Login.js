@@ -1,51 +1,77 @@
 import React, {useState} from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Container, InputArea, CustomButton, CustomButtonText } from "./Style";
+import { Container, InputArea, CustomButton, CustomButtonText} from "./Style";
 import EntryInput from "../../Components/EntryInput";
+import { 
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  Image,
+  StyleSheet
+} from 'react-native';
+import Api from "../../Api";
+
 
 export default () => {
 
   const navigation = useNavigation();
 
   const [emailField, setEmailField] = useState('');
-  const [senhaField, setSenhaField] = useState('');
+  const [passwordField, setpasswordField] = useState('');
   
   const checkEntryInputs = async () =>{
-    if(emailField != null || senhaField != null){
-      navigation.reset({
-        routes: [{name: 'Home'}]
-    });
+
+    
+
+    if(emailField != '' && passwordField != ''){
+      let json = await Api.postUser(emailField, passwordField);
+
+      if(json.Token){
+        navigation.reset({
+          routes: [{name: 'Home'}]
+      });
+      }else{
+        Alert.alert("Aviso!","Usuário ou senha inválidos.");
+      }
+
     }else{
-      alert("Preencha todos os campos.");
+      Alert.alert("Aviso!","Preencha todos os campos.");
     }
   }
 
 
   return(
-    <Container>
-      <InputArea>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>  
+      <KeyboardAvoidingView
+          style = {{ flex: 1 }}
+          behavior = "padding" >
+        <Container>  
+          <InputArea>
+                
+              <EntryInput 
+                placeholder={"Usuário"}
+                value={emailField}
+                onChangeText={t=>setEmailField(t)}
+                isPassword={false}
+              />
 
-        <EntryInput 
-        placeholder={"Usuário"}
-        value={emailField}
-        onChangeText={t=>setEmailField(t)}
-        isPassword={false}
-        />
-        
-        <EntryInput 
-        placeholder={"Senha"}
-        value={senhaField}
-        onChangeText={t=>setSenhaField(t)}
-        isPassword={true}
-        />
+              <EntryInput 
+                placeholder={"Senha"}
+                value={passwordField}
+                onChangeText={t=>setpasswordField(t)}
+                isPassword={true}
+              />
 
-        <CustomButton onPress={checkEntryInputs}>
-          <CustomButtonText>
-            Entrar
-          </CustomButtonText>
-        </CustomButton>
+              <CustomButton onPress={() => checkEntryInputs()}>
+                <CustomButtonText>
+                  Entrar
+                </CustomButtonText>
+              </CustomButton>
 
-      </InputArea>
-    </Container>
+          </InputArea>
+        </Container>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   )
 }

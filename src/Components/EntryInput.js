@@ -18,7 +18,7 @@ const Input = styled.TextInput`
     margin-left: 10px;
 `;
 
-export default ({placeholder, value, onChangeText, isPassword, }) => {
+export default ({placeholder, value, onChangeText, isPassword}) => {
     return (
         <InputArea>
             <Input
