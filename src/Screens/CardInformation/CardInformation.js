@@ -1,7 +1,7 @@
 import { ContainerMainCard, ContainerQuests, TextMainCard, 
     TextMainCardBack, ContainerQuestsBack, ContainerMainCardBack, 
     CustomButton, CustomButtonText, ContainerTextCollection, TextStatusCollection,
-    CustomButtonDisable, CustomButtonTextDisable
+    CustomButtonDisable, CustomButtonTextDisable, ContainerMain
 } from "./Style";
 import { View, Button, StyleSheet, Alert, Image } from "react-native";
 import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
@@ -10,17 +10,22 @@ import React, { useState } from "react";
 import ButtonOpenLink from "../../Components/ButtonOpenLink";
 import Api from "../../Api";
 
-
+import TabBarNavigation from "../../Components/CustomTabBar";
 
 
 export default (Information) => {
-console.log(`https://www.google.com/maps?q=${Information.route.params.data.Endereco.Longitude},${Information.route.params.data.Endereco.Latitude}`)
     const navigator = useNavigation();
-    const TypeCollection = Information.route.params.data.Tarefa.Status;
+    const TypeCollection = Information.route.params.data.Quest.Status;
+
     let TextButton = "";
     let TextCollection = "";
 
+    let Cords = false;
     let disable = false;
+
+    if(Information.route.params.data.Endereco.Longitude != null && !Information.route.params.data.Endereco.Latitude != null){
+        Cords = true;
+    }
 
     switch(TypeCollection){
         case "Coletado":
@@ -40,15 +45,20 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
     }
     
     const putQuest = () => {
-        return Alert.alert(
+        return Alert.alert (
             "Alteração de Status",
             "Você realmente deseja alterar o status dessa viagem?",
                 [
                     {
                     text: "Sim",
                     onPress: () => {
-                        Api.putQuest(Information.route.params.data.id);
-                        navigator.goBack();
+                        const returnPut = Api.putQuest(Information.route.params.data.Quest.Id);
+                        if(returnPut == "Quest id null or Empty" || returnPut == "Nenhum registro encontrado para esse Id"){
+                            Alert.alert("Aviso!", "Ocorreu um erro ao alterar o status da sua viagem");
+                        }else{
+                            navigator.goBack();
+                        }
+                        
                     },
                     },
                     {
@@ -60,9 +70,10 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                 ]
             );
         }
-
+    
     return(
         <GlobalContainer>
+        <ContainerMain>  
             <ContainerMainCardBack>
 
               <ContainerQuestsBack onPress={navigator.goBack}>
@@ -73,7 +84,7 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                 />
 
                 <TextMainCardBack>
-               {Information.route.params.data.Descricao} 
+                    Coleta {Information.route.params.data.Quest.Id} 
                 </TextMainCardBack>
 
                 <ContainerTextCollection>
@@ -91,7 +102,7 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                             style={ImageStyle.RowBack}
                         /> 
                     <TextMainCard>
-                        {Information.route.params.data.Responsavel.Nome} - {Information.route.params.data.Responsavel.CPF} 
+                        {Information.route.params.data.Endereco.Cliente.Nome} - {Information.route.params.data.Endereco.Cliente.CPF} 
                     </TextMainCard>
                 </ContainerQuests>
 
@@ -101,7 +112,7 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                         style={ImageStyle.RowBack}
                     />
                     <TextMainCard>
-                    {Information.route.params.data.Animal.Nome} - {Information.route.params.data.Animal.Especie} 
+                    {Information.route.params.data.Quest.Pet.Nome} - {Information.route.params.data.Quest.Pet.Especie} 
                     </TextMainCard>
                 </ContainerQuests>
 
@@ -111,7 +122,7 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                         style={ImageStyle.RowBack}
                     />
                     <TextMainCard>
-                    {Information.route.params.data.Observacao} 
+                    {Information.route.params.data.Observacao? Information.route.params.data.Observacao : "Sem observações"} 
                     </TextMainCard>
                 </ContainerQuests>
 
@@ -121,7 +132,7 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                         style={ImageStyle.RowBack}
                     />
                     <TextMainCard>
-                    {Information.route.params.data.Responsavel.Telefone} 
+                    {Information.route.params.data.Endereco.Cliente.Telefone} 
                     </TextMainCard>
                 </ContainerQuests>
 
@@ -143,12 +154,11 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
                         <ButtonOpenLink
                             placeholder={"Abrir endereço no mapa"}
                             url={`https://www.google.com/maps?q=${Information.route.params.data.Endereco.Longitude},${Information.route.params.data.Endereco.Latitude}`}
-                            isDisable={false}
+                            isDisable={Cords}
                         >
                     </ButtonOpenLink>
 
                 </View>
-
             </ContainerMainCard>
 
         {!disable?            
@@ -165,8 +175,14 @@ console.log(`https://www.google.com/maps?q=${Information.route.params.data.Ender
             </CustomButtonDisable>
             }
 
+            </ContainerMain>
+
+            <TabBarNavigation currentSreen={"CardInformation"}>
+                
+            </TabBarNavigation>
         </GlobalContainer>
     
+
         
     )
 }
@@ -180,5 +196,5 @@ const ImageStyle = StyleSheet.create({
 });
 
 const ViewStyle = StyleSheet.create({
-    container: {justifyContent: "center", alignItems: "center", flexDirection: "row", margin: 10 },
+    container: {justifyContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 10, marginRight: 10 },
 });

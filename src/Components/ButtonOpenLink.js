@@ -8,36 +8,40 @@ const unsupportedURL = "slack://open?team=123456";
 
 
 const OpenLinkButton = styled.TouchableOpacity`
-    height: 60px;
     border-radius: 30px;
     justify-content: center;
     align-items: center;
-    width: 85%;
+    background-color: #2A6E80;
 `;
 
 const OpenLinkButtonText = styled.Text`
+    margin: 10px;
     font-size: 18px;
     color: #FFF;
 `;
 
-const OpenURLButton = ({ url, children }) => {
+const OpenURLButton = ({ url, children, isDisable }) => {
   const handlePress = useCallback(async () => {
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {
-      await Linking.openURL(url);
+      if(!isDisable){
+        Alert.alert("Aviso!", "Viagem não possuí dados suficiente para visualização no mapa");
+      }else{
+        await Linking.openURL(url);
+      }
     } else {
       Alert.alert(`Não foi possivel abrir: ${url}`);
     }
   }, [url]);
 
-  return <OpenLinkButtonText onPress={handlePress}>{children}</OpenLinkButtonText>;
+  return <OpenLinkButton onPress={handlePress}><OpenLinkButtonText>{children}</OpenLinkButtonText></OpenLinkButton>;
 };
 
 export default ({placeholder, url, isDisable}) => {
     return (
         <View style={styles.container}>
-        <OpenURLButton url={url}>
+        <OpenURLButton url={url} isDisable={isDisable}>
             {placeholder}
         </OpenURLButton>
       </View>

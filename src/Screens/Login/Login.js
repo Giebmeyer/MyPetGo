@@ -11,6 +11,7 @@ import {
   StyleSheet
 } from 'react-native';
 import Api from "../../Api";
+import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
 
 
 export default () => {
@@ -46,7 +47,8 @@ export default () => {
       <KeyboardAvoidingView
           style = {{ flex: 1 }}
           behavior = "padding" >
-        <Container>  
+        <GlobalContainer>  
+          <Container>
           <InputArea>
                 
               <EntryInput 
@@ -70,7 +72,8 @@ export default () => {
               </CustomButton>
 
           </InputArea>
-        </Container>
+          </Container>
+        </GlobalContainer>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   )

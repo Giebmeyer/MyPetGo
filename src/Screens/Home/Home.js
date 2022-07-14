@@ -8,13 +8,13 @@ import Api from "../../Api";
 import {ListArea, TextUser, TextUserQuest, ContainerTexts,
   ContainerMainCard, TextMainCard, ContainerQuests, LoadingIcon, ContainerLoadingIcon} from "./Style";
 
+import TabBarNavigation from "../../Components/CustomTabBar";
+
 export var quests = [];
   
 export default () => {
 
-  const navigatior = useNavigation()
-
-
+  const navigatior = useNavigation();
 
   let [listTakeOnly, setListTakeOnly] = useState([]);
   let [listSearchOnly, setListSearchOnly] = useState([]);
@@ -29,20 +29,22 @@ export default () => {
 
   const getQuest = async () => {
     setLoading(true);
-    quests = await Api.getQuest();
-
+    setRefreshing(true);
+     quests = await Api.getQuest();
+      
       setListQuest(quests);
-      setListSearchOnly(quests.filter(SearchOnly => SearchOnly.Tarefa.Tipo == 'Apenas Buscar' && SearchOnly.Tarefa.Status != 'Entregue'));
-      setListTakeOnly(quests.filter(TakeOnly => TakeOnly.Tarefa.Tipo == 'Apenas Levar' && TakeOnly.Tarefa.Status != 'Entregue'));
-      setListSearchTake(quests.filter(SearchTake => SearchTake.Tarefa.Tipo == 'Levar e Buscar' && SearchTake.Tarefa.Status != 'Entregue'));
+      setListSearchOnly(quests.filter(SearchOnly => SearchOnly.Quest.Tipo == 'Apenas Buscar' && SearchOnly.Quest.Status != 'Entregue'));
+      setListTakeOnly(quests.filter(TakeOnly => TakeOnly.Quest.Tipo == 'Apenas Levar' && TakeOnly.Quest.Status != 'Entregue'));
+      setListSearchTake(quests.filter(SearchTake => SearchTake.Quest.Tipo == 'Levar e Buscar' && SearchTake.Quest.Status != 'Entregue'));
 
-      if(quests.filter(SearchCompleted => SearchCompleted.Tarefa.Status == 'Entregue') != ""){
+      if(quests.filter(SearchCompleted => SearchCompleted.Quest.Status == 'Entregue') != ""){
         setCompleted(true)
-        setListQuestCompleted(quests.filter(SearchCompleted => SearchCompleted.Tarefa.Status == 'Entregue'));
+        setListQuestCompleted(quests.filter(SearchCompleted => SearchCompleted.Quest.Status == 'Entregue'));
       }else{
         setCompleted(false);
       } 
-      
+
+    setRefreshing(false);      
     setLoading(false);
   }
 
@@ -54,7 +56,7 @@ export default () => {
  },[load, navigatior])
 
   const onRefresh = () => {
-    setRefreshing(false);
+    setRefreshing(true);
     getQuest();
   }
 
@@ -99,7 +101,7 @@ export default () => {
                 </ContainerQuests>
                 {listTakeOnly.map((item, k)=>(
               <Card key={k} data={item} />
-              ))}  
+              ))}   
               </ContainerMainCard>
       
       
@@ -128,15 +130,11 @@ export default () => {
               ))}  
               </ContainerMainCard> 
             }
-
-              
+ 
             </ListArea>
             }
-            
-          
-
-           
-          
+            <TabBarNavigation currentSreen={"Home"}>
+            </TabBarNavigation>             
 
     </GlobalContainer>
   )

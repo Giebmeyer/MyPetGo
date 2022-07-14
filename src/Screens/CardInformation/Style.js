@@ -124,3 +124,8 @@ export const TextStatusCollection = styled.Text`
     margin: 5px;
     color: #FFF;
 `;
+
+export const ContainerMain = styled.View`
+    align-items: center;
+    flex: 1;
+`; 

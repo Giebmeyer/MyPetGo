@@ -74,7 +74,7 @@ export default (data) => {
     const navigator = useNavigation();
 
     showInformationCard = (data) => {
-        navigator.navigate("CardInformation",data);
+        navigator.navigate("CardInformation", data);
     }
 
  return(
@@ -89,10 +89,10 @@ export default (data) => {
 
                 <ContainerCardTitle>
                     <Descricao>
-                        Viagem #{data.data.id}
+                        Viagem #{data.data.Quest.Id}
                     </Descricao>
                     <ContainerTextCollection>
-                        <TextStatusCollection>{data.data.Tarefa.Status}</TextStatusCollection>
+                        <TextStatusCollection>{data.data.Quest.Status}</TextStatusCollection>
                     </ContainerTextCollection>
                 </ContainerCardTitle>
 
@@ -112,7 +112,7 @@ export default (data) => {
                 </TextInformation>
 
                 <TextInformation>
-                    {data.data.Tarefa.Tipo}
+                    {data.data.Quest.Tipo}
                 </TextInformation>
 
                 <ContainerMainInformation>
@@ -122,11 +122,11 @@ export default (data) => {
                 </ContainerMainInformation>
 
                 <TextInformation>
-                    {data.data.Responsavel.Nome} - {data.data.Animal.Nome}
+                    {data.data.Endereco.Cliente.Nome} - {data.data.Quest.Pet.Nome}
                 </TextInformation>
 
                 <TextInformation>
-                    {data.data.Responsavel.Telefone}
+                    {data.data.Endereco.Cliente.Telefone}
                 </TextInformation>
             </InformationQuest>
 
@@ -135,3 +135,7 @@ export default (data) => {
  )
 
 }
+
+/*
+
+*/

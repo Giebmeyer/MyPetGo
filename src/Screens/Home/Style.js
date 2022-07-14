@@ -10,6 +10,7 @@ export const Container = styled.SafeAreaView`
 export const ListArea = styled.ScrollView`
     padding: 20px;    
     width: 100%;
+    margin-bottom: 50px;
 `;
 
 export const TextUser = styled.Text`
