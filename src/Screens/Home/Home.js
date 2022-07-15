@@ -76,7 +76,7 @@ export default () => {
                     <TextMainCard>Carregando...</TextMainCard>
                 </ContainerLoadingIcon>
                 :
-                 <ListArea refreshControl={
+                <ListArea refreshControl={
                   <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
                 }>
       

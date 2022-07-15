@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { useNavigation } from "@react-navigation/native";
 import {StyleSheet, Image, View, Button, Alert} from "react-native";
 import AlertInput from 'react-native-alert-input';
-
+import Api from '../Api';
 
 const TabArea = styled.View`
     height: 60px;
@@ -40,7 +40,7 @@ const TabCenter = styled.View`
 `;
 
 
-export default ({currentSreen}) => {
+export default ({currentSreen, idQuest}) => {
 
     const navigatior = useNavigation();
 
@@ -77,8 +77,26 @@ export default ({currentSreen}) => {
         )
     }
 
-    const Anotation = () => {
+    const postAnnotation = async (questAnnotation) => {
+        const returnApi = await Api.postAnnotation(idQuest, questAnnotation);
 
+        if(returnApi == "Quest not found"){
+            Alert.alert("Entrega inválida.");
+        }else{
+            navigatior.goBack();
+        }
+    }
+
+    const Annotation = () => {
+        return (
+            Alert.prompt('Anotação', null, (questAnnotation) =>
+                {if(questAnnotation != "" || questAnnotation != null){
+                    postAnnotation(questAnnotation);
+                }else{
+                    Alert.alert("Anotação inválida.");
+                }}
+          )
+        )       
     }
 
     switch(currentSreen){
@@ -125,7 +143,7 @@ export default ({currentSreen}) => {
                     </TabItem>
         
                     <TabCenter>
-                        <TabItemCenter onPress={() => Anotation()}>
+                        <TabItemCenter onPress={() => Annotation()}>
                         <Image 
                                 source={require("../Assets/pen.png")}
                                 style={ImageStyle.RowBack}

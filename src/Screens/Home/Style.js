@@ -8,7 +8,7 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const ListArea = styled.ScrollView`
-    padding: 20px;    
+    padding: 15px;    
     width: 100%;
     margin-bottom: 50px;
 `;

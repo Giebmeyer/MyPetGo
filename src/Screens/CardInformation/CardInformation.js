@@ -1,9 +1,9 @@
 import { ContainerMainCard, ContainerQuests, TextMainCard, 
     TextMainCardBack, ContainerQuestsBack, ContainerMainCardBack, 
     CustomButton, CustomButtonText, ContainerTextCollection, TextStatusCollection,
-    CustomButtonDisable, CustomButtonTextDisable, ContainerMain
+    CustomButtonDisable, CustomButtonTextDisable, ContainerMain, ListArea, ContainerMainCardButton, ContainerMainAnnotation, CustomAnnotationText, TextMainAnnotations, SubContainer
 } from "./Style";
-import { View, Button, StyleSheet, Alert, Image } from "react-native";
+import { View, Button, StyleSheet, Alert, Image, ScrollView } from "react-native";
 import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -20,11 +20,16 @@ export default (Information) => {
     let TextButton = "";
     let TextCollection = "";
 
-    let Cords = false;
-    let disable = false;
+    var Cords = false;
+    var disable = false;
+    var itAnnotation = false;
 
     if(Information.route.params.data.Endereco.Longitude != null && !Information.route.params.data.Endereco.Latitude != null){
         Cords = true;
+    }
+
+    if(Information.route.params.data.Anotacoes != null && Information.route.params.data.Anotacoes != ""){
+        itAnnotation = true;
     }
 
     switch(TypeCollection){
@@ -93,9 +98,15 @@ export default (Information) => {
 
               </ContainerQuestsBack>
             </ContainerMainCardBack>
-                
+            
+            <ListArea>
 
             <ContainerMainCard>
+            <SubContainer>
+                            <TextMainAnnotations>
+                                Informações
+                            </TextMainAnnotations>
+                        </SubContainer>
               <ContainerQuests>
                     <Image 
                             source={require("../../Assets/person.png")}
@@ -112,7 +123,7 @@ export default (Information) => {
                         style={ImageStyle.RowBack}
                     />
                     <TextMainCard>
-                    {Information.route.params.data.Quest.Pet.Nome} - {Information.route.params.data.Quest.Pet.Especie} 
+                    {Information.route.params.data.Quest.Pet.Nome} - {Information.route.params.data.Quest.Pet.Especie}, {Information.route.params.data.Quest.Pet.Porte} 
                     </TextMainCard>
                 </ContainerQuests>
 
@@ -161,26 +172,45 @@ export default (Information) => {
                 </View>
             </ContainerMainCard>
 
-        {!disable?            
-            <CustomButton onPress = {() => putQuest()}>
-                <CustomButtonText>
-                    {TextButton}
-                </CustomButtonText>
-            </CustomButton>
-            :
-            <CustomButtonDisable disabled={true}>
-                <CustomButtonTextDisable>
-                    {TextButton}
-                </CustomButtonTextDisable>
-            </CustomButtonDisable>
-            }
+                <ContainerMainCardButton>   
+                    {!disable?    
+                    
+                        <CustomButton onPress = {() => putQuest()}>
+                            <CustomButtonText>
+                                {TextButton}
+                            </CustomButtonText>
+                        </CustomButton>
+                        :
+                        <CustomButtonDisable disabled={true}>
+                            <CustomButtonTextDisable>
+                                {TextButton}
+                            </CustomButtonTextDisable>
+                        </CustomButtonDisable>
+                        }
+                </ContainerMainCardButton>    
 
+                {itAnnotation && 
+                <ContainerMainAnnotation>
+                <SubContainer>
+                    <TextMainAnnotations>
+                        Anotações
+                    </TextMainAnnotations>
+                </SubContainer>
+    {Information.route.params.data.Anotacoes.map((item, k)=>(
+      
+        <CustomAnnotationText key={k}>#{k} - {item.Anotacao}</CustomAnnotationText>
+        
+      ))}  
+    </ContainerMainAnnotation>}
+
+            </ListArea>
             </ContainerMain>
 
-            <TabBarNavigation currentSreen={"CardInformation"}>
+            <TabBarNavigation currentSreen={"CardInformation"} idQuest={Information.route.params.data.Quest.Id}>
                 
             </TabBarNavigation>
         </GlobalContainer>
+        
     
 
         

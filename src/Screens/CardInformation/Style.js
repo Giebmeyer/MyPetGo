@@ -7,9 +7,10 @@ export const Container = styled.SafeAreaView`
     align-items: center;
 `;
 
-export const ListArea = styled.ScrollView`
-    padding: 20px;    
+export const ListArea = styled.ScrollView` 
+    padding: 10px;    
     width: 100%;
+    margin-bottom: 50px;
 `;
 
 export const TextUser = styled.Text`
@@ -61,10 +62,24 @@ export const TextMainCardBack = styled.Text`
 
 export const ContainerMainCard = styled.View`
     margin-bottom: 20px;
-    width: 95%;
+    width: 100%;
     border-radius: 10px;
     background-color: #035266;
     align-items: center;
+`;
+
+export const ContainerMainAnnotation = styled.View`
+    margin-bottom: 20px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #035266;
+    align-items: left;
+`;
+
+export const CustomAnnotationText = styled.Text`
+    font-size: 18px;
+    padding: 10px
+    color: #FFF;
 `;
 
 export const ContainerMainCardBack = styled.View`
@@ -84,6 +99,14 @@ export const ContainerQuestsBack = styled.TouchableOpacity`
     align-items: center;
     justify-content: left;
     flex-direction: row;
+`;
+
+export const ContainerMainCardButton = styled.View`
+    margin-bottom: 20px;
+    width: 100%;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const CustomButton = styled.TouchableOpacity`
@@ -129,3 +152,19 @@ export const ContainerMain = styled.View`
     align-items: center;
     flex: 1;
 `; 
+
+
+export const TextMainAnnotations = styled.Text`
+    font-size: 18px;
+    margin: 5px;
+    color: #FFF;
+    font-weight: bold;
+`;
+
+export const SubContainer = styled.View`
+    margin: 10px;
+    width: 100%;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+`;

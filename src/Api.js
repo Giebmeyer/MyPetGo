@@ -30,6 +30,19 @@ export default {
         return json;
     },
 
+    postAnnotation: async (idQuest, Annotation) => {
+        const req = await fetch(`${URL}/Quest_Annotation/${idQuest}/${Annotation}`,{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const json = await req.json();
+        return json;
+    },
+
     putQuest: async (QuestId) => {
         const req = await fetch(`${URL}/quest/StatusModify/${QuestId}`,{
             method: 'PUT',
@@ -42,6 +55,7 @@ export default {
         const FinalJson = JSON.parse(json);
         return FinalJson;
     }
+
 
 
 };
