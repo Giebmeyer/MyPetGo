@@ -1,5 +1,6 @@
-import { ContainerMainCard, ContainerQuests, TextMainCard, 
-    TextMainCardBack, ContainerQuestsBack, ContainerMainCardBack, 
+import {
+    ContainerMainCard, ContainerQuests, TextMainCard,
+    TextMainCardBack, ContainerQuestsBack, ContainerMainCardBack,
     CustomButton, CustomButtonText, ContainerTextCollection, TextStatusCollection,
     CustomButtonDisable, CustomButtonTextDisable, ContainerMain, ListArea, ContainerMainCardButton, ContainerMainAnnotation, CustomAnnotationText, TextMainAnnotations, SubContainer
 } from "./Style";
@@ -24,20 +25,20 @@ export default (Information) => {
     var disable = false;
     var itAnnotation = false;
 
-    if(Information.route.params.data.Endereco.Longitude != null && !Information.route.params.data.Endereco.Latitude != null){
+    if (Information.route.params.data.Endereco.Longitude != null && !Information.route.params.data.Endereco.Latitude != null) {
         Cords = true;
     }
 
-    if(Information.route.params.data.Anotacoes != null && Information.route.params.data.Anotacoes != ""){
+    if (Information.route.params.data.Anotacoes != null && Information.route.params.data.Anotacoes != "") {
         itAnnotation = true;
     }
 
-    switch(TypeCollection){
+    switch (TypeCollection) {
         case "Coletado":
             TextButton = "Entregar Animal";
             TextCollection = "Coletado";
             break;
-        
+
         case "Aguardando Coleta":
             TextButton = "Coletar Animal";
             TextCollection = "Aguardando Coleta";
@@ -48,177 +49,177 @@ export default (Information) => {
             disable = true;
             break;
     }
-    
+
     const putQuest = () => {
-        return Alert.alert (
+        return Alert.alert(
             "Alteração de Status",
             "Você realmente deseja alterar o status dessa viagem?",
-                [
-                    {
+            [
+                {
                     text: "Sim",
                     onPress: () => {
                         const returnPut = Api.putQuest(Information.route.params.data.Quest.Id);
-                        if(returnPut == "Quest id null or Empty" || returnPut == "Nenhum registro encontrado para esse Id"){
+                        if (returnPut == "Quest id null or Empty" || returnPut == "Nenhum registro encontrado para esse Id") {
                             Alert.alert("Aviso!", "Ocorreu um erro ao alterar o status da sua viagem");
-                        }else{
+                        } else {
                             navigator.goBack();
                         }
-                        
+
                     },
-                    },
-                    {
+                },
+                {
                     text: "Não",
-                    onPress:  () => {
+                    onPress: () => {
 
                     },
-                    },
-                ]
-            );
-        }
-    
-    return(
+                },
+            ]
+        );
+    }
+
+    return (
         <GlobalContainer>
-        <ContainerMain>  
-            <ContainerMainCardBack>
+            <ContainerMain>
+                <ContainerMainCardBack>
 
-              <ContainerQuestsBack onPress={navigator.goBack}>
+                    <ContainerQuestsBack onPress={navigator.goBack}>
 
-              <Image 
-                    source={require("../../Assets/ArrowBack.png")}
-                    style={ImageStyle.RowBack}
-                />
+                        <Image
+                            source={require("../../Assets/ArrowBack.png")}
+                            style={ImageStyle.RowBack}
+                        />
 
-                <TextMainCardBack>
-                    Coleta {Information.route.params.data.Quest.Id} 
-                </TextMainCardBack>
+                        <TextMainCardBack>
+                            Coleta {Information.route.params.data.Quest.Id}
+                        </TextMainCardBack>
 
-                <ContainerTextCollection>
-                    <TextStatusCollection>{TextCollection}</TextStatusCollection>
-                </ContainerTextCollection>
+                        <ContainerTextCollection>
+                            <TextStatusCollection>{TextCollection}</TextStatusCollection>
+                        </ContainerTextCollection>
 
-              </ContainerQuestsBack>
-            </ContainerMainCardBack>
-            
-            <ListArea>
+                    </ContainerQuestsBack>
+                </ContainerMainCardBack>
 
-            <ContainerMainCard>
-            <SubContainer>
+                <ListArea>
+
+                    <ContainerMainCard>
+                        <SubContainer>
                             <TextMainAnnotations>
                                 Informações
                             </TextMainAnnotations>
                         </SubContainer>
-              <ContainerQuests>
-                    <Image 
-                            source={require("../../Assets/person.png")}
-                            style={ImageStyle.RowBack}
-                        /> 
-                    <TextMainCard>
-                        {Information.route.params.data.Endereco.Cliente.Nome} - {Information.route.params.data.Endereco.Cliente.CPF} 
-                    </TextMainCard>
-                </ContainerQuests>
+                        <ContainerQuests>
+                            <Image
+                                source={require("../../Assets/person.png")}
+                                style={ImageStyle.RowBack}
+                            />
+                            <TextMainCard>
+                                {Information.route.params.data.Endereco.Cliente.Nome} - {Information.route.params.data.Endereco.Cliente.CPF}
+                            </TextMainCard>
+                        </ContainerQuests>
 
-                <ContainerQuests>
-                    <Image 
-                        source={require("../../Assets/pets.png")}
-                        style={ImageStyle.RowBack}
-                    />
-                    <TextMainCard>
-                    {Information.route.params.data.Quest.Pet.Nome} - {Information.route.params.data.Quest.Pet.Especie}, {Information.route.params.data.Quest.Pet.Porte} 
-                    </TextMainCard>
-                </ContainerQuests>
+                        <ContainerQuests>
+                            <Image
+                                source={require("../../Assets/pets.png")}
+                                style={ImageStyle.RowBack}
+                            />
+                            <TextMainCard>
+                                {Information.route.params.data.Quest.Pet.Nome} - {Information.route.params.data.Quest.Pet.Especie}, {Information.route.params.data.Quest.Pet.Porte}
+                            </TextMainCard>
+                        </ContainerQuests>
 
-                <ContainerQuests>
-                    <Image 
-                        source={require("../../Assets/warningPerson.png")}
-                        style={ImageStyle.RowBack}
-                    />
-                    <TextMainCard>
-                    {Information.route.params.data.Observacao? Information.route.params.data.Observacao : "Sem observações"} 
-                    </TextMainCard>
-                </ContainerQuests>
+                        <ContainerQuests>
+                            <Image
+                                source={require("../../Assets/warningPerson.png")}
+                                style={ImageStyle.RowBack}
+                            />
+                            <TextMainCard>
+                                {Information.route.params.data.Observacao ? Information.route.params.data.Observacao : "Sem observações"}
+                            </TextMainCard>
+                        </ContainerQuests>
 
-                <ContainerQuests>
-                    <Image 
-                        source={require("../../Assets/call.png")}
-                        style={ImageStyle.RowBack}
-                    />
-                    <TextMainCard>
-                    {Information.route.params.data.Endereco.Cliente.Telefone} 
-                    </TextMainCard>
-                </ContainerQuests>
+                        <ContainerQuests>
+                            <Image
+                                source={require("../../Assets/call.png")}
+                                style={ImageStyle.RowBack}
+                            />
+                            <TextMainCard>
+                                {Information.route.params.data.Endereco.Cliente.Telefone}
+                            </TextMainCard>
+                        </ContainerQuests>
 
-                <ContainerQuests>
-                    <Image 
-                        source={require("../../Assets/home.png")}
-                        style={ImageStyle.RowBack}
-                    />
-                    <TextMainCard>
-                    {Information.route.params.data.Endereco.Rua}, Nº {Information.route.params.data.Endereco.Numero} {Information.route.params.data.Endereco.Bairro} - {Information.route.params.data.Endereco.Cidade}  
-                    </TextMainCard>
-                </ContainerQuests>
+                        <ContainerQuests>
+                            <Image
+                                source={require("../../Assets/home.png")}
+                                style={ImageStyle.RowBack}
+                            />
+                            <TextMainCard>
+                                {Information.route.params.data.Endereco.Rua}, Nº {Information.route.params.data.Endereco.Numero} {Information.route.params.data.Endereco.Bairro} - {Information.route.params.data.Endereco.Cidade}
+                            </TextMainCard>
+                        </ContainerQuests>
 
-                    <View style={ViewStyle.container}>
-                        <Image 
-                            source={require("../../Assets/pin_drop.png")}
-                            style={ImageStyle.RowBack}
-                        />
-                        <ButtonOpenLink
-                            placeholder={"Abrir endereço no mapa"}
-                            url={`https://www.google.com/maps?q=${Information.route.params.data.Endereco.Longitude},${Information.route.params.data.Endereco.Latitude}`}
-                            isDisable={Cords}
-                        >
-                    </ButtonOpenLink>
+                        <View style={ViewStyle.container}>
+                            <Image
+                                source={require("../../Assets/pin_drop.png")}
+                                style={ImageStyle.RowBack}
+                            />
+                            <ButtonOpenLink
+                                placeholder={"Abrir endereço no mapa"}
+                                url={`https://www.google.com/maps?q=${Information.route.params.data.Endereco.Longitude},${Information.route.params.data.Endereco.Latitude}`}
+                                isDisable={Cords}
+                            >
+                            </ButtonOpenLink>
 
-                </View>
-            </ContainerMainCard>
+                        </View>
+                    </ContainerMainCard>
 
-                <ContainerMainCardButton>   
-                    {!disable?    
-                    
-                        <CustomButton onPress = {() => putQuest()}>
-                            <CustomButtonText>
-                                {TextButton}
-                            </CustomButtonText>
-                        </CustomButton>
-                        :
-                        <CustomButtonDisable disabled={true}>
-                            <CustomButtonTextDisable>
-                                {TextButton}
-                            </CustomButtonTextDisable>
-                        </CustomButtonDisable>
+                    <ContainerMainCardButton>
+                        {!disable ?
+
+                            <CustomButton onPress={() => putQuest()}>
+                                <CustomButtonText>
+                                    {TextButton}
+                                </CustomButtonText>
+                            </CustomButton>
+                            :
+                            <CustomButtonDisable disabled={true}>
+                                <CustomButtonTextDisable>
+                                    {TextButton}
+                                </CustomButtonTextDisable>
+                            </CustomButtonDisable>
                         }
-                </ContainerMainCardButton>    
+                    </ContainerMainCardButton>
 
-                {itAnnotation && 
-                <ContainerMainAnnotation>
-                <SubContainer>
-                    <TextMainAnnotations>
-                        Anotações
-                    </TextMainAnnotations>
-                </SubContainer>
-    {Information.route.params.data.Anotacoes.map((item, k)=>(
-      
-        <CustomAnnotationText key={k}>#{k} - {item.Anotacao}</CustomAnnotationText>
-        
-      ))}  
-    </ContainerMainAnnotation>}
+                    {itAnnotation &&
+                        <ContainerMainAnnotation>
+                            <SubContainer>
+                                <TextMainAnnotations>
+                                    Anotações
+                                </TextMainAnnotations>
+                            </SubContainer>
+                            {Information.route.params.data.Anotacoes.map((item, k) => (
 
-            </ListArea>
+                                <CustomAnnotationText key={k}>#{k} - {item.Anotacao}</CustomAnnotationText>
+
+                            ))}
+                        </ContainerMainAnnotation>}
+
+                </ListArea>
             </ContainerMain>
 
             <TabBarNavigation currentSreen={"CardInformation"} idQuest={Information.route.params.data.Quest.Id}>
-                
+
             </TabBarNavigation>
         </GlobalContainer>
-        
-    
 
-        
+
+
+
     )
 }
 
 const ImageStyle = StyleSheet.create({
-    RowBack:{
+    RowBack: {
         width: 15,
         height: 15,
         padding: 15,
@@ -226,5 +227,5 @@ const ImageStyle = StyleSheet.create({
 });
 
 const ViewStyle = StyleSheet.create({
-    container: {justifyContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 10, marginRight: 10 },
+    container: { justifyContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 10, marginRight: 10 },
 });

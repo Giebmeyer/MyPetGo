@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import { useNavigation } from "@react-navigation/native";
-import {StyleSheet, Image, View, Button, Alert} from "react-native";
+import { StyleSheet, Image, View, Button, Alert } from "react-native";
 import AlertInput from 'react-native-alert-input';
 import Api from '../Api';
 
@@ -40,163 +40,165 @@ const TabCenter = styled.View`
 `;
 
 
-export default ({currentSreen, idQuest}) => {
+export default ({ currentSreen, idQuest }) => {
 
     const navigatior = useNavigation();
 
     const goTo = (screenName) => {
-        switch(screenName){
+        switch (screenName) {
             case 'Home':
                 navigatior.reset({
-                    routes: [{name: 'Home'}]
+                    routes: [{ name: 'Home' }]
                 });
                 break;
-            
+
             case 'Login':
                 navigatior.reset({
-                    routes: [{name: 'Login'}]
+                    routes: [{ name: 'Login' }]
                 });
-            break;
+                break;
 
             case 'Settings':
                 navigatior.navigate('Settings');
-            break;
+                break;
 
         }
     }
 
     const SettingsConfirm = () => {
         return (
-            Alert.prompt('Digite a senha do técnico', null, (technicianPassword) =>
-                {if(technicianPassword == "true"){
+            Alert.prompt('Digite a senha do técnico', null, (technicianPassword) => {
+                if (technicianPassword == "true") {
                     goTo('Settings')
-                }else{
+                } else {
                     Alert.alert("Senha inválida");
-                }}
-          )
+                }
+            }
+            )
         )
     }
 
     const postAnnotation = async (questAnnotation) => {
         const returnApi = await Api.postAnnotation(idQuest, questAnnotation);
 
-        if(returnApi == "Quest not found"){
+        if (returnApi == "Quest not found") {
             Alert.alert("Entrega inválida.");
-        }else{
+        } else {
             navigatior.goBack();
         }
     }
 
     const Annotation = () => {
         return (
-            Alert.prompt('Anotação', null, (questAnnotation) =>
-                {if(questAnnotation != "" || questAnnotation != null){
+            Alert.prompt('Anotação', null, (questAnnotation) => {
+                if (questAnnotation != "" || questAnnotation != null) {
                     postAnnotation(questAnnotation);
-                }else{
+                } else {
                     Alert.alert("Anotação inválida.");
-                }}
-          )
-        )       
+                }
+            }
+            )
+        )
     }
 
-    switch(currentSreen){
+    switch (currentSreen) {
         case "Home":
             return (
                 <TabArea>
-                    <TabItem onPress={()=> SettingsConfirm()}>
-                        <Image 
+                    <TabItem onPress={() => SettingsConfirm()}>
+                        <Image
                             source={require("../Assets/settings.png")}
                             style={ImageStyle.RowBack}
                         />
                         <TextTab>Opções</TextTab>
                     </TabItem>
-        
+
                     <TabCenter>
-                        <TabItemCenter onPress={()=> goTo('Home')}>
-                        <Image 
+                        <TabItemCenter onPress={() => goTo('Home')}>
+                            <Image
                                 source={require("../Assets/reload.png")}
                                 style={ImageStyle.RowBack}
                             />
                         </TabItemCenter>
                         <TextTab>Atualizar Listagem</TextTab>
                     </TabCenter>
-        
-                    <TabItem onPress={()=>goTo('Login')}>
-                        <Image 
+
+                    <TabItem onPress={() => goTo('Login')}>
+                        <Image
                             source={require("../Assets/exit.png")}
                             style={ImageStyle.RowBack}
                         />
                         <TextTab>Sair</TextTab>
                     </TabItem>
                 </TabArea>
-        );
+            );
 
         case "CardInformation":
             return (
                 <TabArea>
-                    <TabItem onPress={()=>navigatior.goBack()}>
-                        <Image 
+                    <TabItem onPress={() => navigatior.goBack()}>
+                        <Image
                             source={require("../Assets/list.png")}
                             style={ImageStyle.RowBack}
                         />
                         <TextTab>Listagem</TextTab>
                     </TabItem>
-        
+
                     <TabCenter>
                         <TabItemCenter onPress={() => Annotation()}>
-                        <Image 
+                            <Image
                                 source={require("../Assets/pen.png")}
                                 style={ImageStyle.RowBack}
                             />
                         </TabItemCenter>
                         <TextTab>Anotação</TextTab>
                     </TabCenter>
-        
-                    <TabItem onPress={()=>goTo('Login')}>
-                        <Image 
+
+                    <TabItem onPress={() => goTo('Login')}>
+                        <Image
                             source={require("../Assets/exit.png")}
                             style={ImageStyle.RowBack}
                         />
                         <TextTab>Sair</TextTab>
                     </TabItem>
                 </TabArea>
-        );
+            );
 
         case "Settings":
             return (
                 <TabArea>
-                    <TabItem onPress={()=>navigatior.goBack()}>
-                        <Image 
+                    <TabItem onPress={() => navigatior.goBack()}>
+                        <Image
                             source={require("../Assets/list.png")}
                             style={ImageStyle.RowBack}
                         />
                         <TextTab>Listagem</TextTab>
                     </TabItem>
-        
+
                     <TabCenter>
                         <TabItemCenter onPress={() => Anotation()}>
-                        <Image 
+                            <Image
                                 source={require("../Assets/save.png")}
                                 style={ImageStyle.RowBack}
                             />
                         </TabItemCenter>
                         <TextTab>Gravar</TextTab>
                     </TabCenter>
-        
-                    <TabItem onPress={()=>navigatior.goBack()}>
-                        <Image 
+
+                    <TabItem onPress={() => navigatior.goBack()}>
+                        <Image
                             source={require("../Assets/exit.png")}
                             style={ImageStyle.RowBack}
                         />
                         <TextTab>Voltar</TextTab>
                     </TabItem>
                 </TabArea>
-        );
+            );
     }
 }
 
 const ImageStyle = StyleSheet.create({
-    RowBack:{
+    RowBack: {
         width: 15,
         height: 15,
         padding: 15,
@@ -205,9 +207,9 @@ const ImageStyle = StyleSheet.create({
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
     },
-  });
+});
