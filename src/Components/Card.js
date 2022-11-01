@@ -89,10 +89,10 @@ export default (data) => {
 
                     <ContainerCardTitle>
                         <Descricao>
-                            Viagem #{data.data.Quest.Id}
+                            Viagem #{data.data.IdOnline}
                         </Descricao>
                         <ContainerTextCollection>
-                            <TextStatusCollection>{data.data.Quest.Status}</TextStatusCollection>
+                            <TextStatusCollection>{data.data.Status}</TextStatusCollection>
                         </ContainerTextCollection>
                     </ContainerCardTitle>
 
@@ -104,25 +104,25 @@ export default (data) => {
                     </ContainerMainInformation>
 
                     <TextInformation>
-                        Bairro: {data.data.Endereco.Bairro}
+                        Bairro: {data.data.Bairro}
                     </TextInformation>
 
                     <TextInformation>
-                        {data.data.Endereco.Rua}, {data.data.Endereco.Numero}
+                        {data.data.Rua}, {data.data.Numero}
                     </TextInformation>
 
                     <TextInformation>
-                        {data.data.Quest.Tipo}
+                        {data.data.Tipo}
                     </TextInformation>
 
                     <ContainerMainInformation>
                         <DescricaoMainInformation>
-                            Responsavel
+                            Responsável
                         </DescricaoMainInformation>
                     </ContainerMainInformation>
 
                     <TextInformation>
-                        {data.data.Endereco.Cliente.Nome} - {data.data.Quest.Pet.Nome} : {data.data.Endereco.Cliente.Telefone}
+                        {data.data.Nome_Cliente} : {data.data.Telefone_Cliente ? data.data.Telefone_Cliente : "Sem telefone."}
                     </TextInformation>
                 </InformationQuest>
 

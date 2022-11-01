@@ -4,7 +4,7 @@ import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
 import { RefreshControl } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Api from "../../Api/Api";
-
+import sinc from "../../Api/Sincronizador";
 import {
   ListArea, TextUser, TextUserQuest, ContainerTexts,
   ContainerMainCard, TextMainCard, ContainerQuests, LoadingIcon, ContainerLoadingIcon
@@ -12,7 +12,14 @@ import {
 
 import TabBarNavigation from "../../Components/CustomTabBar";
 
+import { database } from '../../database';
+import { UserModel } from '../../database/Models/userModel'
+
+import { Q } from '@nozbe/watermelondb';
+import { writer } from '@nozbe/watermelondb/decorators'
+
 export var quests = [];
+export var questss = [];
 
 export default () => {
 
@@ -34,16 +41,30 @@ export default () => {
   const getQuest = async () => {
     setLoading(true);
     setRefreshing(true);
-    quests = await Api.getQuest();
 
-    setListQuest(quests);
-    setListSearchOnly(quests.filter(SearchOnly => SearchOnly.Quest.Tipo == 'Apenas Buscar' && SearchOnly.Quest.Status != 'Entregue'));
-    setListTakeOnly(quests.filter(TakeOnly => TakeOnly.Quest.Tipo == 'Apenas Levar' && TakeOnly.Quest.Status != 'Entregue'));
-    setListSearchTake(quests.filter(SearchTake => SearchTake.Quest.Tipo == 'Levar e Buscar' && SearchTake.Quest.Status != 'Entregue'));
+    const allQuests = await database.get('Quests').query(
+      Q.unsafeSqlQuery(
+        'select distinct c.Nome as `Nome_Cliente`,' +
+        ' c.CPF as `CPF_Cliente`,' +
+        ' c.Telefone as `Telefone_Cliente`,' +
+        ' q.id as `ID_Quests`, q.IdOnline as `IDOnline_Quest`, ' +
+        ' q.*, p.*, e.* from Quests q ' +
+        ' join clientes c on c.id = q.Cliente_id ' +
+        ' join Enderecos e on e.Cliente_id = c.id ' +
+        ' join Pets p on p.id = q.Pet_id' +
+        ' where q.Cliente_id is not null and q.Pet_id is not null and q.updated_at != 0',
+      )
+    ).unsafeFetchRaw()
 
-    if (quests.filter(SearchCompleted => SearchCompleted.Quest.Status == 'Entregue') != "") {
+    setListQuest(allQuests);
+
+    setListSearchOnly(allQuests.filter(SearchOnly => SearchOnly.Tipo == 'Apenas Buscar' && SearchOnly.Status != 'Entregue'));
+    setListTakeOnly(allQuests.filter(TakeOnly => TakeOnly.Tipo == 'Apenas Levar' && TakeOnly.Status != 'Entregue'));
+    setListSearchTake(allQuests.filter(SearchTake => SearchTake.Tipo == 'Levar e Buscar' && SearchTake.Status != 'Entregue'));
+
+    if (allQuests.filter(SearchCompleted => SearchCompleted.Status == 'Entregue') != "") {
       setCompleted(true)
-      setListQuestCompleted(quests.filter(SearchCompleted => SearchCompleted.Quest.Status == 'Entregue'));
+      setListQuestCompleted(allQuests.filter(SearchCompleted => SearchCompleted.Status == 'Entregue'));
     } else {
       setCompleted(false);
     }
@@ -52,16 +73,75 @@ export default () => {
     setLoading(false);
   }
 
+  const putQuest = async () => {
+    const response = await database.get('Quests').query(
+      Q.where('Sincronizado', "0")
+    ).fetch()
+
+
+    response.forEach(async element => {
+      await database.write(async () => {
+        await element.update(data => {
+          data.Sincronizado = "1"
+        })
+      })
+      await Api.postQuest(element.IdOnline, element.Status);
+    });
+  }
+
+  const postAnnotations = async () => {
+
+
+    console.log("CAIU AQUI")
+    const response = await database.get('QuestAnnotation').query(
+      Q.on('Quests', 'id', Q.notEq(null)),
+      Q.where('Sincronizado', "0"),
+      Q.where('Quest_Id', Q.notEq(null))
+    ).fetch()
+
+    response.forEach(async (element, index) => {
+      console.log("Response => ", element, " Posicao : ", index)
+
+      const quests = await database.get('Quests').query(
+        Q.on('QuestAnnotation', 'id', element.id)
+      ).fetch()
+
+      console.log("Quests => ", quests)
+      if (quests.length != 0) {
+        console.log("Quest encontrada: ", quests[0].IdOnline)
+        await database.write(async () => {
+          await element.update(data => {
+            data.Sincronizado = "1"
+          })
+        })
+
+
+        await Api.postAnnotation(quests[0].IdOnline, element.Anotacao)
+      } else {
+        console.log("Quest indefinda")
+      }
+
+
+
+    });
+
+
+
+
+  }
 
   useEffect(() => {
     getQuest();
+    putQuest();
+    postAnnotations();
     navigatior.addListener('focus', () => setLoad(!load));
-    console.log("Retorno ",retorno);
   }, [load, navigatior])
 
   const onRefresh = () => {
     setRefreshing(true);
+    putQuest();
     getQuest();
+    postAnnotations();
   }
 
   return (
@@ -113,7 +193,7 @@ export default () => {
           <ContainerMainCard>
             <ContainerQuests>
               <TextMainCard>
-              Levar e Buscar
+                Levar e Buscar
               </TextMainCard>
             </ContainerQuests>
             {listSearchTake.map((item, k) => (

@@ -4,35 +4,46 @@ const URL = 'http://192.168.66.129:8000';
 
 export default {
 
-    postToken: async (token) => {
-        const req = await fetch(`${URL}/validateToken/${token}`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-
-        const json = await req.json();
-        console.log("response: ", json, " json.token: ", json.Token)
-        return json.Token
-    },
-
-    postUser: async (user, password) => {
-        const req = await fetch(`${URL}/Login/${user}/${password}`, {
-            method: 'POST',
+    getClients: async() => {
+        const req = await fetch(`${URL}/getClients`,{
+            method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-        });
-
+        })
         const json = await req.json();
         return json;
     },
+
+    getUsers: async() => {
+        const req = await fetch(`${URL}/getUsers`,{
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+        const json = await req.json();
+        return json;
+    },
+
+    getPets: async() => {
+        const req = await fetch(`${URL}/getPets`,{
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+        const json = await req.json();
+        return json;
+    },
+
+
 
     getQuest: async () => {
-        const req = await fetch(`${URL}/quest`, {
+        const req = await fetch(`${URL}/getQuests`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -44,8 +55,8 @@ export default {
         return json;
     },
 
-    getAnnotations: async (QuestId) => {
-        const req = await fetch(`${URL}/getAnnotation/${QuestId}`, {
+    getAnnotations: async () => {
+        const req = await fetch(`${URL}/getAnnotations`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -57,33 +68,18 @@ export default {
         return json;
     },
 
-    postAnnotation: async (idQuest, Annotation) => {
-        console.log("API => ", idQuest, "Status => ", Annotation)
-        const req = await fetch(`${URL}/postAnnotation/${idQuest}/${Annotation}`, {
-            method: 'POST',
+    getAndress: async () => {
+        const req = await fetch(`${URL}/getAndress`, {
+            method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
         });
-
         const json = await req.json();
+
         return json;
     },
-
-    postQuest: async (id, status) => {
-        const req = await fetch(`${URL}/quest/StatusModify/${id}/${status}`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-        });
-
-        const json = await req.json();
-        return json;
-    }
-
 
 
 };

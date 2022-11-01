@@ -6,6 +6,9 @@ import AlertInput from 'react-native-alert-input';
 import prompt from 'react-native-prompt-android';
 import Api from '../Api/Api';
 
+import { database } from '../database';
+import { Q } from '@nozbe/watermelondb';
+
 const TabArea = styled.View`
     height: 80px;
     background-color: #4EADBE;
@@ -41,8 +44,7 @@ const TabCenter = styled.View`
 `;
 
 
-export default ({ currentSreen, idQuest }) => {
-
+export default ({ currentSreen, Quest }) => {
     const navigatior = useNavigation();
 
     const goTo = (screenName) => {
@@ -107,14 +109,26 @@ export default ({ currentSreen, idQuest }) => {
     }
 
     const postAnnotation = async (questAnnotation) => {
-        console.log("Anotação e id enviada API: ", questAnnotation, idQuest);
-        const returnApi = await Api.postAnnotation(idQuest, questAnnotation);
-        console.log("Retorno API: ", returnApi)
-        if (returnApi == "Quest not found") {
-            Alert.alert("Entrega inválida.");
-        } else {
-            navigatior.goBack();
-        }
+
+        let newPost = ""
+
+        await database.write(async () => {
+            newPost = await database
+                .get('QuestAnnotation')
+                .create(data => {
+                    data.IdOnline = "0",
+                        data.Anotacao = questAnnotation,
+                        data.Excluida = "0",
+                        data.Sincronizado = "0",
+                        data.QuestId.id = Quest.route.params.data.ID_Quests
+
+                }
+                )
+        })
+
+        console.log("New comentario => ", newPost)
+
+        navigatior.goBack();
     }
 
     const Annotation = () => {
@@ -219,7 +233,7 @@ export default ({ currentSreen, idQuest }) => {
                     <TabItem onPress={() => goTo('Login')}>
                         <Image
                             source={require("../../Assets/exit.png")}
-                            style={ImageStyle.RowBack}
+                            style={ImageStyle.RowBack} r
                         />
                         <TextTab>Sair</TextTab>
                     </TabItem>

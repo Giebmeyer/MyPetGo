@@ -13,38 +13,37 @@ import Api from "../../Api/Api";
 
 import TabBarNavigation from "../../Components/CustomTabBar";
 
+import { database } from '../../database';
+import { Q } from '@nozbe/watermelondb';
 
 export default (Information) => {
     const navigator = useNavigation();
-    const TypeCollection = Information.route.params.data.Quest.Status;
+    const TypeCollection = Information.route.params.data.Status;
 
     let TextButton = "";
     let TextCollection = "";
-    let anotations = [];
+    const [Annotations, setAnnotations] = useState([])
 
     var Cords = false;
     var disable = false;
-    var itAnnotation = false;
+    let itAnnotation = false;
 
 
     useEffect(() => {
         getAnotations();
+        console.log("==> ", Information.route.params.data);
     }, [])
 
     getAnotations = async () => {
-        anotations = await Api.getAnnotations(Information.route.params.data.Quest.Id);
-        console.log(anotations.length);
-        if (anotations != null && anotations != "" && anotations.length > 0) {
-            itAnnotation = true;
-        }
-        console.log(itAnnotation);
+        setAnnotations(await database.get('QuestAnnotation').query(
+            Q.on('Quests', 'id', Information.route.params.data.ID_Quests),
+            Q.where('Excluida', Q.notEq("1"))
+        ).fetch())
     }
 
-    if (Information.route.params.data.Anotacoes != null && Information.route.params.data.Anotacoes != "") {
-        itAnnotation = true;
-    }
 
-    if (Information.route.params.data.Endereco.Longitude != null && !Information.route.params.data.Endereco.Latitude != null) {
+
+    if (Information.route.params.data.Longitude != null && !Information.route.params.data.Latitude != null) {
         Cords = true;
     }
 
@@ -72,13 +71,36 @@ export default (Information) => {
             [
                 {
                     text: "Sim",
-                    onPress: () => {
-                        const returnPut = Api.putQuest(Information.route.params.data.Quest.Id);
-                        if (returnPut == "Quest id null or Empty" || returnPut == "Nenhum registro encontrado para esse Id") {
-                            Alert.alert("Aviso!", "Ocorreu um erro ao alterar o status da sua viagem");
+                    onPress: async () => {
+                        var newStatus = "";
+
+                        if (Information.route.params.data.Status == "Coletado") {
+                            newStatus = "Entregue";
+                        }
+                        if (Information.route.params.data.Status == "Aguardando Coleta") {
+                            newStatus = "Coletado";
+                        }
+
+                        const registro = await database.get(`Quests`).query(
+                            Q.where('id', Information.route.params.data.ID_Quests)
+                        )
+                        console.log("REGISTRO RELACIONADO => ", registro[0].Status)
+                        if (!registro[0]) {
+                            return "NAN"
                         } else {
+
+                            await database.write(async () => {
+                                await registro[0].update(data => {
+                                    data.Status = newStatus,
+                                        data.Sincronizado = "0"
+                                })
+                            })
+                            console.log("Registro Atualizado - Quests - Interno");
                             navigator.goBack();
                         }
+
+
+
 
                     },
                 },
@@ -107,7 +129,7 @@ export default (Information) => {
                         />
 
                         <TextMainCardBack>
-                            Coleta {Information.route.params.data.Quest.Id}
+                            Coleta {Information.route.params.data.IdColeta}
                         </TextMainCardBack>
 
                         <ContainerTextCollection>
@@ -131,7 +153,7 @@ export default (Information) => {
                                 style={ImageStyle.RowBack}
                             />
                             <TextMainCard>
-                                {Information.route.params.data.Endereco.Cliente.Nome} - {Information.route.params.data.Endereco.Cliente.CPF}
+                                {Information.route.params.data.Nome_Cliente} - {Information.route.params.data.CPF_Cliente ? Information.route.params.data.CPF_Cliente : "Sem CPF"}
                             </TextMainCard>
                         </ContainerQuests>
 
@@ -141,7 +163,7 @@ export default (Information) => {
                                 style={ImageStyle.RowBack}
                             />
                             <TextMainCard>
-                                {Information.route.params.data.Quest.Pet.Nome} - {Information.route.params.data.Quest.Pet.Especie}, {Information.route.params.data.Quest.Pet.Porte}
+                                {Information.route.params.data.Nome} - {Information.route.params.data.Especie}, {Information.route.params.data.Porte}
                             </TextMainCard>
                         </ContainerQuests>
 
@@ -161,7 +183,7 @@ export default (Information) => {
                                 style={ImageStyle.RowBack}
                             />
                             <TextMainCard>
-                                {Information.route.params.data.Endereco.Cliente.Telefone}
+                                {Information.route.params.data.Telefone ? Information.route.params.data.Telefone : "Sem telefone"}
                             </TextMainCard>
                         </ContainerQuests>
 
@@ -171,7 +193,7 @@ export default (Information) => {
                                 style={ImageStyle.RowBack}
                             />
                             <TextMainCard>
-                                {Information.route.params.data.Endereco.Rua}, Nº {Information.route.params.data.Endereco.Numero} {Information.route.params.data.Endereco.Bairro} - {Information.route.params.data.Endereco.Cidade}
+                                {Information.route.params.data.Rua}, Nº {Information.route.params.data.Numero} {Information.route.params.data.Bairro} - {Information.route.params.data.Cidade}
                             </TextMainCard>
                         </ContainerQuests>
 
@@ -182,7 +204,7 @@ export default (Information) => {
                             />
                             <ButtonOpenLink
                                 placeholder={"Abrir endereço no mapa"}
-                                url={`https://www.google.com/maps?q=${Information.route.params.data.Endereco.Longitude},${Information.route.params.data.Endereco.Latitude}`}
+                                url={`https://www.google.com/maps?q=${Information.route.params.data.Longitude},${Information.route.params.data.Latitude}`}
                                 isDisable={Cords}
                             >
                             </ButtonOpenLink>
@@ -207,24 +229,23 @@ export default (Information) => {
                         }
                     </ContainerMainCardButton>
 
-                    {itAnnotation &&
-                        <ContainerMainAnnotation>
-                            <SubContainer>
-                                <TextMainAnnotations>
-                                    Anotações
-                                </TextMainAnnotations>
-                            </SubContainer>
-                            {Information.route.params.data.Anotacoes.map((item, k) => (
+                    <ContainerMainAnnotation>
+                        <SubContainer>
+                            <TextMainAnnotations>
+                                Anotações
+                            </TextMainAnnotations>
+                        </SubContainer>
+                        {Annotations.map((item, k) => (
 
-                                <CustomAnnotationText key={k}>#{k+1} - {item.Anotacao}</CustomAnnotationText>
+                            <CustomAnnotationText CustomAnnotationText key={k}>#{k + 1} - {item.Anotacao}</CustomAnnotationText>
 
-                            ))}
-                        </ContainerMainAnnotation>}
+                        ))}
+                    </ContainerMainAnnotation>
 
                 </ListArea>
             </ContainerMain>
 
-            <TabBarNavigation currentSreen={"CardInformation"} idQuest={Information.route.params.data.Quest.Id}>
+            <TabBarNavigation currentSreen={"CardInformation"} Quest={Information}>
 
             </TabBarNavigation>
         </GlobalContainer>

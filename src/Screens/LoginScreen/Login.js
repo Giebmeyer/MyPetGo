@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Container, InputArea, CustomButton, CustomButtonText } from "./LoginStyle";
 import EntryInput from "../../Components/EntryInput";
@@ -14,6 +14,10 @@ import {
 import Api from "../../Api/Api";
 import { GlobalContainer } from "../GlobalStyles/GlobalStyle";
 
+import { database } from '../../database';
+import { UserModel } from '../../database/Models/userModel'
+
+import { Q } from '@nozbe/watermelondb';
 
 export default () => {
 
@@ -25,9 +29,14 @@ export default () => {
   const checkEntryInputs = async () => {
 
     if (emailField != '' && passwordField != '') {
-      let json = await Api.postUser(emailField, passwordField);
 
-      if (json.Token) {
+      const registro = await database.get(`Usuarios`).query(
+        Q.where('Usuario', emailField),
+        Q.where('Senha', passwordField)
+      )
+
+      if (registro[0].Token) {
+        await database.localStorage.set("userToken", registro[0].Token)
         navigation.reset({
           routes: [{ name: 'Home' }]
         });
@@ -41,9 +50,7 @@ export default () => {
 
 
   }
-
-
-
+  
   return (
     <GlobalContainer>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
